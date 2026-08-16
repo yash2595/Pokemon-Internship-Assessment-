@@ -2,31 +2,75 @@
 
 > A production-grade, portfolio-quality Pokémon discovery web application built with **React 19**, **TypeScript**, **Vite**, **Tailwind CSS (v3)**, and **React Router 7**, powered by the live public **PokéAPI**.
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-
-> **Deployment Note**: SPA rewrite fallback configuration (`vercel.json` & `public/_redirects`) is pre-configured and ready. Run `npx vercel` to publish your live production URL.
+[![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2_Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.2.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Oxlint](https://img.shields.io/badge/Oxlint-Passing_0_Errors-00D26A?style=for-the-badge)](https://oxc.rs/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
 ---
 
-## 📸 Interface Overview
+> ### 🚀 **Live Production Demo**: [https://pokemon-internship-assessment.vercel.app](https://pokemon-internship-assessment.vercel.app)
 
-### Desktop Explorer & Detail Modal
-```
+---
+
+## 🌟 Why This Stands Out
+
+Unlike standard Pokédex lookup clones, this application is engineered with high-value product features and analytical depth:
+
+- 🛡️ **6-Slot Battle Squad Builder with Live Defensive Synergy Analysis**: Add Pokémon to a persistent battle team that automatically computes shared weaknesses ($\ge 2\times$ damage taken) and uncovered attack threats against a full 18-type effectiveness matrix.
+- 📊 **"Explain This Stat" Derived Percentile Insights**: Evaluates raw base stats against competitive percentile tiers (e.g., *"Top 15% High Tier! Speed higher than 85% of Pokémon"*).
+- 🎯 **Pokédex Discovery Tracker**: Tracks unique entries viewed across sessions (`Discovered: N / 1302`), reframing the lookup app into an engaging discovery experience.
+- ✨ **3D Mouse-Tilt Hover Effect & Audio Cry Playback**: Hardware-accelerated 3D trading-card tilt with parallax artwork depth, shiny sprite toggle, and live PokéAPI cry sound playback.
+
+---
+
+## 📌 Table of Contents
+
+- [📸 Interface & Visual Preview](#-interface--visual-preview)
+- [✨ Feature Highlights](#-feature-highlights)
+  - [🔍 Core Discovery & Search](#-core-discovery--search)
+  - [📖 Rich Detail & Biology](#-rich-detail--biology)
+  - [⚡ Power Tools & Differentiators](#-power-tools--differentiators)
+  - [🛠️ Architectural & DX Highlights](#️-architectural--dx-highlights)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🌐 API Endpoints Used](#-api-endpoints-used)
+- [🏗️ Architecture & Data Flow](#️-architecture--data-flow)
+- [📁 Project Structure](#-project-structure)
+- [💻 Local Setup & Installation](#-local-setup--installation)
+- [🚀 Deployment Guide](#-deployment-guide)
+- [💡 Challenges Faced & Engineering Decisions](#-challenges-faced--engineering-decisions)
+- [🔮 Future Roadmap](#-future-roadmap)
+- [📜 License](#-license)
+
+---
+
+## 📸 Interface & Visual Preview
+
+| View Component | Description | ASCII Layout |
+|---|---|---|
+| **Main Explorer** | Soft light theme with 3D trading card tilt, search bar, 18-type filter pills, and live count badges | `[ Search Bar \| Type Pills \| 20 Card Grid ]` |
+| **Detail Modal & Cries** | Species flavor text, physical traits, audio cry player, shiny toggle, and stat percentile insights | `[ Flavor Text \| Cry Player \| Stat Bars ]` |
+| **Side-by-Side Face-Off** | Paired base stat comparison with `▲` winner indicators and total BST evaluation banner | `[ Pokémon A vs Pokémon B \| Paired Bars ]` |
+| **6-Slot Squad Builder** | Battle squad drawer with live 18-type defensive coverage matrix analysis | `[ 6 Slots \| Shared Weakness Matrix ]` |
+
+### Terminal & Desktop Explorer Mockup
+```text
 +-----------------------------------------------------------------------------------+
-|  [Pokéball Icon] Pokédex Explorer    Loaded: 20/1302   [⌘K]  [⚔️ VS 0/2]  [❤️ 0] ☀️ |
+|  [Pokéball] Pokédex Explorer    Loaded: 20/1302   [⌘K]   [⚔️ VS 2/2]   [❤️ 4] ☀️ |
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |    ⚡ Discover the World of Pokémon                                               |
 |    Search by name or Pokédex ID...                         [🔍 Search]            |
 |                                                                                   |
-|    [All] [Fire] [Water] [Grass] [Electric] [Psychic] [Dragon] ... (18 Types)      |
+|    [All] [🔥 Fire] [💧 Water] [🌿 Grass] [⚡ Electric] ... (18 Types with Emojis)    |
 |    Sort by: [ID] [Name] [Type]   Direction: [Asc ↑]   [ ] Favorites Only          |
 +-----------------------------------------------------------------------------------+
 |  +----------------+  +----------------+  +----------------+  +----------------+  |
 |  | #0001     [VS] |  | #0004     [VS] |  | #0007     [VS] |  | #0025     [VS] |  |
 |  |   [Bulbasaur]  |  |  [Charmander]  |  |   [Squirtle]   |  |   [Pikachu]    |  |
-|  |  (Grass/Poison)|  |    (Fire)      |  |    (Water)     |  |   (Electric)   |  |
+|  |  (🌿 Grass)    |  |    (🔥 Fire)   |  |   (💧 Water)   |  |  (⚡ Electric)  |  |
 |  | HP 45 ATK 49   |  | HP 39 ATK 52   |  | HP 44 ATK 48   |  | HP 35 ATK 55   |  |
 |  +----------------+  +----------------+  +----------------+  +----------------+  |
 +-----------------------------------------------------------------------------------+
@@ -34,71 +78,53 @@
 
 ---
 
-## 🌟 Key Features
+## ✨ Feature Highlights
 
-### 📊 1. "Explain This Stat" Derived Percentile Insights (Option H)
-> **Key Differentiator**: Most Pokédex clones stop at raw stat numbers — this one tells you what they mean.
-- **Contextual Intelligence**: Evaluates base stats against competitive percentile tiers (e.g. *"Top 15% High Tier! Great Speed (higher than 85% of Pokémon)"*).
-- **Interactive Inspection**: Hovering or tapping any stat bar in [`PokemonStats.tsx`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/src/components/pokemon/PokemonStats.tsx) dynamically calculates and displays a derived stat intelligence banner.
+### 🔍 Core Discovery & Search
 
-### 🧩 2. Pokédex Discovery Tracker & Progress Ring (Option F)
-> **Key Differentiator**: Reframes the application from a simple lookup tool into an engaging discovery experience.
-- **Discovery Counter**: Tracks unique Pokémon detail entries opened across sessions (`usePokedexCompletion` with `localStorage` persistence).
-- **Header Badge**: Displays a live `Discovered: N` progress badge in the header navigation bar.
+- **Debounced Instant Search**: Live 300ms debounced input searching by Pokémon name or Pokédex ID (`/` keyboard shortcut to focus, `Esc` to clear).
+- **18-Type Filter Bar**: Filter by elemental type with custom contrast-compliant badges and type emojis (e.g. 🔥 Fire, 💧 Water, ⚡ Electric, 🌿 Grass).
+- **Smart Type Effectiveness Tooltips**: Hovering over any type pill displays a floating tooltip showing top 2 "Weak against" and top 2 "Strong vs" types.
+- **Multi-Sort & Direction**: Sort by ID, Name, or Primary Type in ascending or descending order.
+- **Favorites System**: Heart toggle backed by `localStorage` persistence and dedicated filter mode.
+- **Responsive Theme Switcher**: Defaults to soft light theme (`#F8FAFC`) with full dark mode (`#0F172A`) support.
 
-### 🛡️ 3. 6-Slot Squad Team Builder with Live Type-Coverage Analysis
-> **Key Differentiator**: Unlike typical Pokédex lookups, this includes a persistent 6-slot squad builder with real-time defensive synergy analysis.
-- **Squad Tray & Drawer**: Add up to 6 Pokémon to your battle squad from cards or detail modal (`useLocalStorage` persistence).
-- **Live Defensive Synergy Analysis**: Calculates team-wide **Shared Weaknesses** ($\ge 2\times$ damage to multiple members), **Uncovered Threats** (attack types where 0 members have resistance), and total **Resistances & Immunities** using an full 18-type effectiveness chart matrix.
+### 📖 Rich Detail & Biology
 
-### 🔊 2. Real PokéAPI Audio Cry Playback
-- **Sound Effects**: Dedicated audio player button in the detail modal that streams the official Pokémon cry audio directly from PokéAPI (`sprites.cries.latest` / `legacy`).
-- **Interactive UI**: Animated sound wave icon (`Volume2`) and bounce animation during playback.
+- **Species Flavor Text**: Integrates `/pokemon-species/{name}` endpoint for official Pokédex entries and genus classifications (e.g. *"Seed Pokémon"*).
+- **PokéAPI Audio Cry Player**: Stream official Pokémon cry audio (`sprites.cries.latest`) with animated bounce icons.
+- **✨ Shiny Sprite Toggle**: Toggle between normal and shiny official artwork with a smooth 200ms opacity crossfade.
+- **"You Might Also Like" Recommendations**: Displays type-matched recommendations from the in-memory cache.
+- **Physical Metrics**: Displays height and weight formatted in metric ($m$, $kg$) and imperial ($ft$, $lbs$).
 
-### 💡 3. "You Might Also Like" Similar Pokémon Recommendations
-- **Recommendations Engine**: Displays a row of 3-4 recommended Pokémon sharing the primary type with the current Pokémon, utilizing the in-memory type cache without extra API overhead.
+### ⚡ Power Tools & Differentiators
 
-### ⚔️ 4. Side-by-Side Pokémon Comparison (Face-Off)
-- **Selection**: Click the **`VS`** badge on any card header or **`Add Compare`** inside the detail modal (max 2 at a time).
-- **Comparison View**:
-  - Displays artwork, name, ID, types, height, and weight side-by-side.
-  - Paired horizontal base-stat breakdown (HP, ATK, DEF, SPA, SPD, SPE) with **`▲` winner indicator** and emerald highlights for the winning stat per row.
-  - Overall **Base Stat Total (BST)** winner evaluation banner.
-- **State Isolation**: Transient session state managed via `usePokemonCompare`. Isolated click handlers (`e.stopPropagation()`) ensure compare toggling never triggers card detail navigation.
+- **⚔️ Side-by-Side Pokémon Face-Off (Compare View)**: Select 2 Pokémon to view paired stat bars, `▲` stat winner indicators, and total Base Stat Total (BST) winner evaluation.
+- **🛡️ 6-Slot Battle Squad Builder**: Persistent 6-slot squad tray with live defensive synergy analysis (identifying shared weaknesses and uncovered threats).
+- **📊 "Explain This Stat" Intelligence**: Hover over stat bars to view competitive percentile rankings (e.g. *"High Tier Speed"*).
+- **🎯 Pokédex Completion Ring**: Live counter tracking unique entries opened across sessions.
+- **⌘K Command Palette**: Keyboard-first quick search modal accessible via `Ctrl+K` / `Cmd+K`.
 
-### ⌘K 2. Command Palette (Quick Search)
-- **Keyboard-First**: Press `Ctrl+K` / `Cmd+K` from anywhere in the app to bring up a centered search modal.
-- **Instant Search**: Type a name, ID, or type to live-filter results with mini artwork previews.
-- **Navigation**: `ArrowDown` / `ArrowUp` highlights results, `Enter` opens detail view, `Escape` dismisses overlay.
+### 🛠️ Architectural & DX Highlights
 
-### 📖 3. Species Flavor Text & Biology ("Did You Know?")
-- **PokéAPI Integration**: Fetches `/pokemon-species/{name}` endpoint for Pokédex flavor text entries and official genus category classifications (e.g. *"Seed Pokémon"*).
-- **Graceful Degradation**: Returns `null` on network or API failure; the detail view continues to render stats, abilities, and moves seamlessly.
-
-### 🔍 4. Unified AND-Logic Filtering & Lazy Type Pagination
-- **Filter Pipeline**: Combines search queries, type filters, and favorites toggles simultaneously using a single `useMemo` pipeline (`loadedItems -> search -> type -> favorites -> sort`).
-- **Lazy Type Loading**: `/type/{type}` fetches roster references first; full details are fetched on-demand in 20-item chunks, eliminating 100+ parallel API spams.
-
-### 🔗 5. Shareable Deep Links & SPA Fallback Routing
-- Direct URL navigation to `/pokemon/:name` opens the detail modal over the main explorer view.
-- Pre-configured SPA rewrite fallback rules:
-  - Vercel: [`vercel.json`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/vercel.json) rewrites `/(.*)` to `/index.html`.
-  - Netlify: [`public/_redirects`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/public/_redirects) redirects `/*` to `/index.html`.
+- **GPU-Accelerated 3D Tilt**: Hardware-accelerated 3D mouse tilt with parallax artwork depth (`translateZ(25px)`) and radial glare overlay (automatically disabled on touch devices).
+- **Pure React Hooks Architecture**: Strict state updater purity preventing render-phase side effects or loop depth warnings.
+- **SPA Deep Linking**: Direct URL routing to `/pokemon/:name` with Vercel and Netlify rewrite configurations.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Domain | Technology |
-|---|---|
-| **Core Framework** | React 19 + TypeScript (Strict Mode) |
-| **Build Tooling** | Vite 8 + PostCSS |
-| **Styling & Design** | Tailwind CSS v3 + Custom Keyframes & Themes |
-| **Icons** | Lucide React |
-| **Routing** | React Router 7 (`BrowserRouter`, `Routes`, `Route`) |
-| **Linting & Quality** | Oxlint + TypeScript (`tsc -b`) |
-| **API** | Live REST PokéAPI v2 |
-| **Deployment** | Vercel / Netlify SPA rewrite configuration |
+| Category | Technology | Version |
+|---|---|---|
+| **Core Framework** | React | `v19.0.0` |
+| **Language** | TypeScript (Strict Mode) | `v5.7.2` |
+| **Build Tooling** | Vite | `v8.2.1` |
+| **Styling & Design** | Tailwind CSS + PostCSS | `v3.4.17` |
+| **Icons** | Lucide React | `v0.475.0` |
+| **Routing** | React Router | `v7.1.5` |
+| **Code Quality** | Oxlint | `v0.15.10` |
+| **API Integration** | PokéAPI REST v2 | Live |
 
 ---
 
@@ -106,7 +132,7 @@
 
 **Base URL**: `https://pokeapi.co/api/v2/`
 
-| Endpoint | Method | Purpose |
+| Endpoint | Method | Description |
 |---|---|---|
 | `/pokemon?limit=20&offset=N` | `GET` | Paginated summary roster retrieval |
 | `/pokemon/{name}` | `GET` | Full detail fetch by Pokémon name |
@@ -116,12 +142,12 @@
 
 ---
 
-## 🏗️ Architecture Diagram
+## 🏗️ Architecture & Data Flow
 
 ```mermaid
 graph TD
-    A[PokéAPI v2] --> B[pokemonApi.ts - Data Access & Cache Layer]
-    B --> C[in-memory Map Caches]
+    A[PokéAPI REST v2] --> B[pokemonApi.ts - Cache & Transformer Layer]
+    B --> C[In-Memory Map Caches]
     C --> D[usePokemonExplorer Hook]
     C --> E[usePokemonDetail Hook]
     D --> F[App.tsx / ExplorerHome]
@@ -129,74 +155,79 @@ graph TD
     F --> H[Header / Hero / Filters / Grid]
     F --> I[CommandPalette Overlay]
     F --> J[PokemonCompareModal - Face-Off]
-    G --> K[PokemonDetailModal - Tabs & Flavor Text]
+    F --> L[TeamBuilderDrawer - Squad Analysis]
+    G --> K[PokemonDetailModal - Cries & Shiny Toggle]
 ```
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 src/
 ├── components/
 │   ├── common/
-│   │   ├── Badge.tsx           # Type badge pill with inline hex themes
-│   │   ├── CommandPalette.tsx  # ⌘K / Ctrl+K keyboard-first quick search
-│   │   ├── EmptyState.tsx      # Contextual empty search/filter/favorites views
-│   │   ├── ErrorState.tsx      # Network / 404 error banner with retry
-│   │   ├── LoadingSkeleton.tsx # Shimmer skeleton cards & modal layout
-│   │   └── ScrollToTop.tsx     # Smooth floating scroll-to-top button
+│   │   ├── Badge.tsx           # Type pill badge with icons & hover matchup tooltips
+│   │   ├── CommandPalette.tsx  # ⌘K / Ctrl+K keyboard quick search
+│   │   ├── EmptyState.tsx      # Contextual empty search/filter views
+│   │   ├── ErrorState.tsx      # Network error banner with retry trigger
+│   │   ├── LoadingSkeleton.tsx # Shimmer loading skeletons
+│   │   └── ScrollToTop.tsx     # Floating scroll-to-top button
 │   ├── filters/
-│   │   ├── SearchBar.tsx       # Debounced input with keyboard shortcuts (/ & Esc)
+│   │   ├── SearchBar.tsx       # Debounced input with keyboard shortcuts
 │   │   ├── SortSelector.tsx    # ID / Name / Type sort + Asc/Desc toggle
 │   │   └── TypeFilterBar.tsx   # Horizontally scrollable 18-type pill selector
 │   ├── layout/
-│   │   ├── Footer.tsx          # API attribution & keyboard shortcut legend
-│   │   ├── Header.tsx          # Brand logo, live counts, compare trigger & theme toggle
-│   │   └── Hero.tsx            # Hero banner with integrated search input
+│   │   ├── Footer.tsx          # API attribution & keyboard legend
+│   │   ├── Header.tsx          # Brand logo, counts, compare & squad triggers
+│   │   └── Hero.tsx            # Hero banner with embedded search bar
 │   └── pokemon/
-│       ├── FavoriteButton.tsx  # Heart toggle with spring pop animation
-│       ├── PokemonCard.tsx     # Artwork, ID, badges, stats preview, VS compare & hover lift
-│       ├── PokemonCompareModal.tsx # Side-by-side Pokémon stat face-off comparison
-│       ├── PokemonDetailModal.tsx # Mobile drawer / desktop modal detail view + species flavor text
-│       ├── PokemonGrid.tsx     # State machine grid (Skeleton -> Error -> Empty -> Cards)
-│       └── PokemonStats.tsx    # Animated base stat bars & BST summary
+│       ├── FavoriteButton.tsx  # Heart toggle with pop animation
+│       ├── PokemonCard.tsx     # 3D tilt card, artwork float & quick stats
+│       ├── PokemonCompareModal.tsx # Side-by-side Pokémon stat face-off
+│       ├── PokemonDetailModal.tsx # Full detail modal, audio cry & shiny toggle
+│       ├── PokemonGrid.tsx     # State machine grid (Skeleton -> Cards)
+│       ├── PokemonStats.tsx    # Animated base stat bars & percentile insights
+│       └── TeamBuilderDrawer.tsx  # 6-slot squad builder & type coverage matrix
 ├── config/
-│   └── pokemonTypes.ts         # Centralized contrast-compliant color tokens for 18 types
+│   ├── pokemonTypes.ts         # Type color tokens, WCAG contrast & emoji icons
+│   └── typeEffectiveness.ts    # 18x18 type effectiveness chart matrix
 ├── hooks/
-│   ├── useDebounce.ts          # Search input debouncer (300ms)
-│   ├── useFavorites.ts         # LocalStorage favorite ID set manager
-│   ├── useFocusTrap.ts         # Accessible modal focus lock & Escape listener
-│   ├── useLocalStorage.ts      # Resilient localStorage hook with error boundary
-│   ├── usePokemonCompare.ts    # Transient 2-item side-by-side compare manager
-│   ├── usePokemonDetail.ts     # Single Pokémon detail fetcher for modal / deep link
-│   ├── usePokemonExplorer.ts   # Core filter pipeline & pagination coordinator
+│   ├── useDebounce.ts          # Search debouncer (300ms)
+│   ├── useFavorites.ts         # LocalStorage favorite manager
+│   ├── useFocusTrap.ts         # Accessible modal focus trap
+│   ├── useLocalStorage.ts      # Resilient localStorage hook with async event sync
+│   ├── usePokedexCompletion.ts # Discovered entries tracker
+│   ├── usePokemonCompare.ts    # Global side-by-side compare manager
+│   ├── usePokemonDetail.ts     # Single Pokémon detail fetcher
+│   ├── usePokemonExplorer.ts   # Main filter pipeline & pagination coordinator
+│   ├── useTeamBuilder.ts       # 6-slot battle team manager
 │   └── useTheme.ts             # Light/Dark/System theme switcher
 ├── services/
-│   └── pokemonApi.ts           # PokéAPI client with Map caches & view-model transformers
+│   └── pokemonApi.ts           # PokéAPI client with Map caches & view-models
 ├── types/
-│   └── pokemon.ts              # Strongly-typed Raw API & Normalized UI interfaces
+│   └── pokemon.ts              # Strongly-typed Raw API & UI interfaces
 ├── utils/
-│   └── pokemon.ts              # Id formatting, metric conversion, stat bar helpers
-├── App.tsx                     # Main page assembly & React Router setup
-├── main.tsx                    # React root render with BrowserRouter wrapper
-└── index.css                   # Tailwind directives & custom CSS utilities
+│   └── pokemon.ts              # ID formatting, metric conversion, stat helpers
+├── App.tsx                     # Main application layout & route setup
+├── main.tsx                    # React root entry point
+└── index.css                   # Tailwind directives & custom CSS keyframes
 ```
 
 ---
 
-## 💻 Installation & Local Setup
+## 💻 Local Setup & Installation
 
 ### Prerequisites
 - **Node.js**: `v18.0.0` or higher
 - **npm**: `v9.0.0` or higher
 
-### Commands
+### Step-by-Step Commands
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/pokemon-explorer.git
-cd pokemon-explorer
+git clone https://github.com/yash2595/Pokemon-Internship-Assessment-.git
+cd Pokemon-Internship-Assessment-
 
 # 2. Install dependencies
 npm install
@@ -204,56 +235,63 @@ npm install
 # 3. Start development server
 npm run dev
 
-# 4. Run type-check & linter
+# 4. Run TypeScript build & Oxlint audit
 npm run build
-npm run lint
+npx oxlint
 
-# 5. Production preview
+# 5. Preview production build locally
 npm run preview
 ```
 
 ---
 
-## 🚀 Deployment Instructions
+## 🚀 Deployment Guide
 
-### Deploy to Vercel (CLI or GitHub)
+### Deploying to Vercel (CLI or GitHub)
 
 1. **Option A: Vercel CLI**:
    ```bash
-   npx vercel
+   npx vercel --prod
    ```
-   Follow the prompts to select production deployment.
 
 2. **Option B: GitHub Integration**:
    - Push repository to GitHub.
-   - Import project in Vercel Dashboard.
-   - Build settings automatically detect Vite (`npm run build`, output directory `dist`).
+   - Import project into Vercel Dashboard.
+   - Build settings are auto-detected (`npm run build`, output directory `dist`).
 
-The [`vercel.json`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/vercel.json) rewrite rule handles SPA routing fallback for hard refreshes on `/pokemon/:name`.
-
----
-
-## 💡 Engineering Decisions & Challenges Faced
-
-### 1. Unified Filter Pipeline Architecture
-Rather than maintaining separate, competing array states for search results, type filters, and favorites, all active filters are processed through a single `useMemo` computation pipeline inside `usePokemonExplorer`. This guarantees zero state conflicts and eliminates edge cases where clearing one filter leaves stale items.
-
-### 2. Pure React Hooks & State Isolation
-All custom storage hooks (`useLocalStorage`, `useFavorites`, `useTeamBuilder`, `usePokedexCompletion`) enforce strict state updater purity without triggering side effects during React's render phase. Asynchronous event dispatching ensures window storage synchronization happens cleanly without cascading re-renders.
-
-### 3. Graceful Endpoint Fallbacks
-Secondary data fetches (such as species flavor text and audio cry playback) fail gracefully without breaking the core detail view. If PokéAPI species endpoints experience rate-limiting, the detail modal cleanly falls back to essential stats, physical traits, and move pools.
+The [`vercel.json`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/vercel.json) rewrite rule handles SPA routing fallback for hard refreshes on `/pokemon/:name`:
+```json
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+```
 
 ---
 
-## 🔮 Future Improvements
+## 💡 Challenges Faced & Engineering Decisions
 
-- **Evolution Chain Visualization**: Interactive horizontal node graph displaying complete evolution trees (e.g., Pichu $\rightarrow$ Pikachu $\rightarrow$ Raichu) with level/item requirements.
-- **Offline PWA Support**: Service worker integration for full offline caching of previously loaded Pokémon assets.
-- **Battle Damage Simulator**: Interactive move damage calculator against custom defense setups.
+### 1. Pure React Hooks & State Updaters (React 19 Compatibility)
+- **Challenge**: State updater functions (`setStoredValue((prev) => ...)`) containing side-effect event dispatches (`window.dispatchEvent`) caused React 19 to log update depth warnings and hook queue errors during concurrent renders.
+- **Solution**: Refactored `useLocalStorage.ts` to execute state updates as pure functions, deferring custom window event dispatches asynchronously via `setTimeout(..., 0)`.
+
+### 2. Eliminating Cross-Component Render Collisions
+- **Challenge**: Calling `usePokemonExplorer` inside `PokemonDetailRouteModal` triggered state updates on `ExplorerHome` while `PokemonDetailRouteModal` was rendering, causing React cross-component update warnings.
+- **Solution**: Created a pure, synchronous cache lookup function (`getCachedSimilarPokemon`) in `pokemonApi.ts` that retrieves type recommendations directly from memory without invoking React hooks or `setState`.
+
+### 3. Tailwind v3 Spring Curves & Custom Timing
+- **Challenge**: Standard Tailwind CSS transition utilities lacked support for custom spring easing curves like `cubic-bezier(0.34, 1.25, 0.64, 1)`.
+- **Solution**: Extended `tailwind.config.js` with `duration-600` (`600ms`) and `ease-spring` tokens, backed by direct inline style fallbacks in `PokemonStats.tsx`.
+
+---
+
+## 🔮 Future Roadmap
+
+- 🧬 **Interactive Evolution Chain Visualizer**: Node graph displaying complete evolution trees (e.g. Pichu $\rightarrow$ Pikachu $\rightarrow$ Raichu) with level/item requirements.
+- 📱 **Offline PWA Support**: Service worker integration for offline caching of previously loaded Pokémon artwork and sound effects.
+- ⚔️ **Battle Damage Simulator**: Interactive move damage calculator evaluating attack stats against defender type matchups.
 
 ---
 
 ## 📜 License
 
-MIT License. Designed & developed for portfolio evaluation.
+MIT License © 2026. Designed & developed for technical evaluation.
