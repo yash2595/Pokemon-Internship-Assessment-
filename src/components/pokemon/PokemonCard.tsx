@@ -211,10 +211,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           loading="lazy"
           onError={() => setImgError(true)}
           style={{
-            transform: tilt.isHovered ? 'translateZ(25px) scale(1.1)' : 'translateZ(0px) scale(1)',
+            transform: tilt.isHovered ? 'translateZ(25px) scale(1.1)' : undefined,
+            animationDelay: `${(index % 5) * 0.4}s`,
+            animationPlayState: tilt.isHovered ? 'paused' : 'running',
             transition: tilt.isHovered ? 'transform 150ms ease-out' : 'transform 400ms ease-out',
           }}
-          className="relative z-10 h-32 w-32 object-contain drop-shadow-md group-hover:drop-shadow-2xl"
+          className="relative z-10 h-32 w-32 object-contain drop-shadow-md group-hover:drop-shadow-2xl animate-idleFloat"
         />
       </div>
 

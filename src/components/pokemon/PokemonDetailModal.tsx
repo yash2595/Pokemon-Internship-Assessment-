@@ -318,7 +318,9 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 src={artworkSrc}
                 alt={pokemon.name}
                 onError={() => setImgError(true)}
-                className="relative z-10 h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-2xl animate-float transition-opacity duration-200 ease-in-out"
+                className={`relative z-10 h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-2xl transition-all duration-200 ease-in-out ${
+                  isPlayingCry ? 'animate-cryShake scale-110' : 'animate-idleFloat'
+                }`}
               />
             </div>
           </div>

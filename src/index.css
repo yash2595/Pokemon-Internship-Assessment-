@@ -89,6 +89,18 @@
   .animate-fadeIn {
     animation: fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  /* Continuous Idle Floating Animation */
+  .animate-idleFloat {
+    animation: idleFloat 3.5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* Cry Shake Animation */
+  .animate-cryShake {
+    animation: cryShake 0.3s ease-in-out infinite;
+    will-change: transform;
+  }
 }
 
 @keyframes modalPop {
@@ -111,6 +123,27 @@
   }
 }
 
+@keyframes idleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes cryShake {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-4px) rotate(-3deg);
+  }
+  75% {
+    transform: translateX(4px) rotate(3deg);
+  }
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -121,7 +154,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
