@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Swords } from 'lucide-react';
 import type { PokemonDetail } from '../../types/pokemon';
 import { POKEMON_TYPE_STYLES } from '../../config/pokemonTypes';
@@ -26,17 +26,82 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   index = 0,
 }) => {
   const [imgError, setImgError] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef<number | null>(null);
+
+  // 3D Tilt State
+  const [tilt, setTilt] = useState<{
+    rotateX: number;
+    rotateY: number;
+    glareX: number;
+    glareY: number;
+    isHovered: boolean;
+  }>({
+    rotateX: 0,
+    rotateY: 0,
+    glareX: 50,
+    glareY: 50,
+    isHovered: false,
+  });
+
   const primaryType = pokemon.types[0] ?? 'normal';
   const cfg = POKEMON_TYPE_STYLES[primaryType] ?? POKEMON_TYPE_STYLES.normal;
 
-  // Artwork fallback chain: official-artwork → front_default sprite
+  // Check if device supports true hover/mouse events (disables 3D tilt on touch devices)
+  const isHoverSupported =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!isHoverSupported || !cardRef.current) return;
+
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Max tilt capped at ±8 degrees for a premium, non-gimmicky feel
+      const rotateX = -((y - centerY) / centerY) * 8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+
+      const glareX = (x / rect.width) * 100;
+      const glareY = (y / rect.height) * 100;
+
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        setTilt({
+          rotateX,
+          rotateY,
+          glareX,
+          glareY,
+          isHovered: true,
+        });
+      });
+    },
+    [isHoverSupported]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isHoverSupported) return;
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    setTilt((prev) => ({
+      ...prev,
+      rotateX: 0,
+      rotateY: 0,
+      isHovered: false,
+    }));
+  }, [isHoverSupported]);
+
+  // Artwork fallback chain
   const artworkSrc = imgError
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
     : pokemon.imageUrl;
 
   const paddedId = formatPokemonId(pokemon.id);
 
-  // Pull quick-preview stats from the stats array
   const getStatVal = (name: string): number =>
     pokemon.stats.find((s) => s.name === name)?.value ?? 0;
 
@@ -55,18 +120,44 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
     }
   };
 
+  const cardTransform = tilt.isHovered
+    ? `perspective(1000px) rotateX(${tilt.rotateX.toFixed(2)}deg) rotateY(${tilt.rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`
+    : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+
   return (
     <div
+      ref={cardRef}
       role="button"
       tabIndex={0}
       onClick={() => onSelect(pokemon)}
       onKeyDown={handleKeyDown}
-      style={{ animationDelay: `${Math.min(index * 40, 400)}ms` }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: cardTransform,
+        transition: tilt.isHovered
+          ? 'transform 100ms ease-out, box-shadow 300ms ease-out'
+          : 'transform 400ms ease-out, box-shadow 400ms ease-out',
+        animationDelay: `${Math.min(index * 40, 400)}ms`,
+        transformStyle: 'preserve-3d',
+      }}
       aria-label={`View details for ${formatPokemonName(pokemon.name)}, ID ${paddedId}`}
-      className={`group relative flex flex-col justify-between rounded-3xl p-5 cursor-pointer bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-2xl hover:shadow-rose-500/10 hover:-translate-y-1.5 transition-all duration-300 transition-spring focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 select-none overflow-hidden motion-safe:animate-fadeIn ${
+      className={`group relative flex flex-col justify-between rounded-3xl p-5 cursor-pointer bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-2xl hover:shadow-rose-500/10 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 select-none overflow-hidden motion-safe:animate-fadeIn ${
         isInCompare ? 'ring-2 ring-rose-500 border-rose-500/50' : ''
       }`}
     >
+      {/* Dynamic Mouse Glare Overlay */}
+      {isHoverSupported && (
+        <div
+          className="pointer-events-none absolute inset-0 z-20 rounded-3xl transition-opacity duration-300"
+          style={{
+            opacity: tilt.isHovered ? 0.18 : 0,
+            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.7) 0%, transparent 60%)`,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Background ambient radial glow matching primary type */}
       <div
         className="pointer-events-none absolute -top-12 -right-12 h-40 w-40 rounded-full opacity-25 dark:opacity-35 blur-2xl transition-opacity duration-300 group-hover:opacity-50"
@@ -106,9 +197,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         />
       </div>
 
-      {/* Artwork Area */}
+      {/* Artwork Area with 3D Parallax Floating Depth */}
       <div className="relative my-3 flex h-36 w-full items-center justify-center">
-        {/* Soft circle platform */}
         <div
           className="absolute h-28 w-28 rounded-full opacity-15 dark:opacity-25 transition-transform duration-300 group-hover:scale-110"
           style={{ backgroundColor: cfg.badgeBgLight }}
@@ -120,7 +210,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           alt={pokemon.name}
           loading="lazy"
           onError={() => setImgError(true)}
-          className="relative z-10 h-32 w-32 object-contain drop-shadow-md transition-all duration-300 ease-out group-hover:scale-110 group-hover:drop-shadow-2xl"
+          style={{
+            transform: tilt.isHovered ? 'translateZ(25px) scale(1.1)' : 'translateZ(0px) scale(1)',
+            transition: tilt.isHovered ? 'transform 150ms ease-out' : 'transform 400ms ease-out',
+          }}
+          className="relative z-10 h-32 w-32 object-contain drop-shadow-md group-hover:drop-shadow-2xl"
         />
       </div>
 
