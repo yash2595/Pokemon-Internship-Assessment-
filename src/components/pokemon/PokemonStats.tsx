@@ -100,8 +100,12 @@ export const PokemonStats: React.FC<PokemonStatsProps> = ({
               {/* Progress track */}
               <div className="h-2.5 w-full rounded-full bg-slate-100 dark:bg-slate-800/80 overflow-hidden p-0.5 border border-slate-200/40 dark:border-slate-800/40">
                 <div
-                  className={`h-full rounded-full transition-all duration-700 ease-out shadow-xs ${barClass}`}
-                  style={{ width: animated ? `${percent}%` : '0%' }}
+                  className={`h-full rounded-full transition-all duration-600 ease-spring shadow-xs ${barClass}`}
+                  style={{
+                    width: animated ? `${percent}%` : '0%',
+                    transitionDuration: '600ms',
+                    transitionTimingFunction: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
+                  }}
                 />
               </div>
             </div>

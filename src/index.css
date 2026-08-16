@@ -80,6 +80,35 @@
     background-size: 200% 100%;
     animation: shimmer 1.8s infinite linear;
   }
+
+  /* Refined 200ms cubic-bezier modal scale-95 -> scale-100 + fade animation */
+  .animate-modalPop {
+    animation: modalPop 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {

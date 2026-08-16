@@ -74,6 +74,14 @@ function resolveArtwork(raw: RawPokemonDetail): string {
   );
 }
 
+function resolveShinyArtwork(raw: RawPokemonDetail): string {
+  return (
+    raw.sprites.other?.['official-artwork']?.front_shiny ??
+    raw.sprites.front_shiny ??
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${raw.id}.png`
+  );
+}
+
 /**
  * Map raw API detail into the app-level `PokemonDetail` view-model.
  * Moves are capped at 20 to keep payloads small in the UI.
@@ -83,6 +91,7 @@ function transformDetail(raw: RawPokemonDetail): PokemonDetail {
     id: raw.id,
     name: raw.name,
     imageUrl: resolveArtwork(raw),
+    shinyImageUrl: resolveShinyArtwork(raw),
     types: raw.types
       .sort((a, b) => a.slot - b.slot)
       .map((t) => t.type.name as PokemonTypeKey),

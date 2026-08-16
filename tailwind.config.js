@@ -7,6 +7,12 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      transitionDuration: {
+        600: '600ms',
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.34, 1.25, 0.64, 1)',
+      },
       fontFamily: {
         sans: ['"Outfit"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],

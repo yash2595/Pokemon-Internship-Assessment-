@@ -30,9 +30,11 @@ export interface RawPokemonMove {
 
 export interface RawPokemonSprites {
   front_default: string | null;
+  front_shiny?: string | null;
   other?: {
     "official-artwork"?: {
       front_default: string | null;
+      front_shiny?: string | null;
     };
   };
 }
@@ -100,6 +102,7 @@ export interface PokemonDetail extends PokemonSummary {
   stats: { name: string; value: number }[];
   moves: string[]; // limited list of move names
   cryUrl?: string; // audio cry URL
+  shinyImageUrl?: string; // shiny sprite URL
 }
 
 export interface PokemonSpecies {

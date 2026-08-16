@@ -38,3 +38,36 @@ export function getDefenseMultiplier(
   });
   return mult;
 }
+
+export interface TypeMatchupSummary {
+  weakTo: PokemonTypeKey[];
+  strongVs: PokemonTypeKey[];
+}
+
+/**
+ * Returns top 2 weak to and top 2 strong vs types for a given PokemonTypeKey.
+ */
+export function getTypeMatchupSummary(type: PokemonTypeKey): TypeMatchupSummary {
+  const weakTo: PokemonTypeKey[] = [];
+  const strongVs: PokemonTypeKey[] = [];
+
+  (Object.keys(TYPE_CHART) as PokemonTypeKey[]).forEach((atk) => {
+    if (TYPE_CHART[atk]?.[type] === 2) {
+      weakTo.push(atk);
+    }
+  });
+
+  const targets = TYPE_CHART[type];
+  if (targets) {
+    (Object.keys(targets) as PokemonTypeKey[]).forEach((def) => {
+      if (targets[def] === 2) {
+        strongVs.push(def);
+      }
+    });
+  }
+
+  return {
+    weakTo: weakTo.slice(0, 2),
+    strongVs: strongVs.slice(0, 2),
+  };
+}

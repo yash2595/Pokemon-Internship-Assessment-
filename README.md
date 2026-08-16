@@ -233,6 +233,27 @@ The [`vercel.json`](file:///c:/Users/hp/Downloads/Pokemon%20Explorer/vercel.json
 
 ---
 
+## 💡 Engineering Decisions & Challenges Faced
+
+### 1. Unified Filter Pipeline Architecture
+Rather than maintaining separate, competing array states for search results, type filters, and favorites, all active filters are processed through a single `useMemo` computation pipeline inside `usePokemonExplorer`. This guarantees zero state conflicts and eliminates edge cases where clearing one filter leaves stale items.
+
+### 2. Pure React Hooks & State Isolation
+All custom storage hooks (`useLocalStorage`, `useFavorites`, `useTeamBuilder`, `usePokedexCompletion`) enforce strict state updater purity without triggering side effects during React's render phase. Asynchronous event dispatching ensures window storage synchronization happens cleanly without cascading re-renders.
+
+### 3. Graceful Endpoint Fallbacks
+Secondary data fetches (such as species flavor text and audio cry playback) fail gracefully without breaking the core detail view. If PokéAPI species endpoints experience rate-limiting, the detail modal cleanly falls back to essential stats, physical traits, and move pools.
+
+---
+
+## 🔮 Future Improvements
+
+- **Evolution Chain Visualization**: Interactive horizontal node graph displaying complete evolution trees (e.g., Pichu $\rightarrow$ Pikachu $\rightarrow$ Raichu) with level/item requirements.
+- **Offline PWA Support**: Service worker integration for full offline caching of previously loaded Pokémon assets.
+- **Battle Damage Simulator**: Interactive move damage calculator against custom defense setups.
+
+---
+
 ## 📜 License
 
 MIT License. Designed & developed for portfolio evaluation.

@@ -27,6 +27,8 @@ export interface TypeStyleConfig {
   name: string;
   /** Key used in API */
   key: PokemonTypeKey;
+  /** Relevant type emoji */
+  icon: string;
   /** Badge background color (light mode) */
   badgeBgLight: string;
   /** Badge text color (light mode) */
@@ -49,6 +51,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   normal: {
     name: 'Normal',
     key: 'normal',
+    icon: '⚪',
     badgeBgLight: '#A8A77A',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#7C7E5E',
@@ -61,6 +64,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   fire: {
     name: 'Fire',
     key: 'fire',
+    icon: '🔥',
     badgeBgLight: '#EE8130',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#B95F23',
@@ -73,6 +77,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   water: {
     name: 'Water',
     key: 'water',
+    icon: '💧',
     badgeBgLight: '#6390F0',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#3E68C2',
@@ -85,6 +90,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   electric: {
     name: 'Electric',
     key: 'electric',
+    icon: '⚡',
     badgeBgLight: '#F7D02C',
     badgeTextLight: '#212529',
     badgeBorderLight: '#C5A200',
@@ -97,6 +103,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   grass: {
     name: 'Grass',
     key: 'grass',
+    icon: '🌿',
     badgeBgLight: '#7AC74C',
     badgeTextLight: '#212529',
     badgeBorderLight: '#558C30',
@@ -109,6 +116,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   ice: {
     name: 'Ice',
     key: 'ice',
+    icon: '❄️',
     badgeBgLight: '#96D9D6',
     badgeTextLight: '#212529',
     badgeBorderLight: '#6CB2AE',
@@ -121,6 +129,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   fighting: {
     name: 'Fighting',
     key: 'fighting',
+    icon: '🥊',
     badgeBgLight: '#C22E28',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#8A1F1A',
@@ -133,6 +142,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   poison: {
     name: 'Poison',
     key: 'poison',
+    icon: '🧪',
     badgeBgLight: '#A33EA1',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#752979',
@@ -145,6 +155,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   ground: {
     name: 'Ground',
     key: 'ground',
+    icon: '🏜️',
     badgeBgLight: '#E2BF65',
     badgeTextLight: '#212529',
     badgeBorderLight: '#B89A45',
@@ -157,6 +168,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   flying: {
     name: 'Flying',
     key: 'flying',
+    icon: '🕊️',
     badgeBgLight: '#A98FF3',
     badgeTextLight: '#212529',
     badgeBorderLight: '#805CC8',
@@ -169,6 +181,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   psychic: {
     name: 'Psychic',
     key: 'psychic',
+    icon: '🔮',
     badgeBgLight: '#F95587',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#C63D6A',
@@ -181,6 +194,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   bug: {
     name: 'Bug',
     key: 'bug',
+    icon: '🐛',
     badgeBgLight: '#A6B91A',
     badgeTextLight: '#212529',
     badgeBorderLight: '#7A8619',
@@ -193,6 +207,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   rock: {
     name: 'Rock',
     key: 'rock',
+    icon: '🪨',
     badgeBgLight: '#B6A136',
     badgeTextLight: '#212529',
     badgeBorderLight: '#856D23',
@@ -205,6 +220,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   ghost: {
     name: 'Ghost',
     key: 'ghost',
+    icon: '👻',
     badgeBgLight: '#735797',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#4B3763',
@@ -217,6 +233,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   dragon: {
     name: 'Dragon',
     key: 'dragon',
+    icon: '🐉',
     badgeBgLight: '#6F35FC',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#4429A1',
@@ -229,6 +246,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   dark: {
     name: 'Dark',
     key: 'dark',
+    icon: '🌑',
     badgeBgLight: '#705746',
     badgeTextLight: '#FFFFFF',
     badgeBorderLight: '#47332D',
@@ -241,6 +259,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   steel: {
     name: 'Steel',
     key: 'steel',
+    icon: '🛡️',
     badgeBgLight: '#B7B7CE',
     badgeTextLight: '#212529',
     badgeBorderLight: '#9393AA',
@@ -253,6 +272,7 @@ export const POKEMON_TYPE_STYLES: Record<PokemonTypeKey, TypeStyleConfig> = {
   fairy: {
     name: 'Fairy',
     key: 'fairy',
+    icon: '✨',
     badgeBgLight: '#D685AD',
     badgeTextLight: '#212529',
     badgeBorderLight: '#A45C84',

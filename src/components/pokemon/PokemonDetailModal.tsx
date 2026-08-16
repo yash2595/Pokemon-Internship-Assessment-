@@ -61,6 +61,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const [imgError, setImgError] = useState(false);
   const [species, setSpecies] = useState<PokemonSpecies | null>(null);
   const [isPlayingCry, setIsPlayingCry] = useState(false);
+  const [isShiny, setIsShiny] = useState(false);
 
   const modalRef = useFocusTrap<HTMLDivElement>({ isOpen, onClose });
 
@@ -87,9 +88,15 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
   const weightInfo = formatWeight(pokemon.weight);
   const paddedId = formatPokemonId(pokemon.id);
 
-  const artworkSrc = imgError
+  const normalSrc = imgError
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
     : pokemon.imageUrl;
+
+  const shinySrc =
+    pokemon.shinyImageUrl ||
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`;
+
+  const artworkSrc = isShiny ? shinySrc : normalSrc;
 
   const playCry = () => {
     if (!pokemon.cryUrl) return;
@@ -120,7 +127,7 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-slate-950/70 backdrop-blur-md transition-opacity duration-300 animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6 bg-slate-950/70 backdrop-blur-md transition-opacity duration-200 animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="pokemon-modal-title"
@@ -129,7 +136,10 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-h-[90vh] sm:max-w-2xl rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200/80 dark:border-slate-800 shadow-2xl transition-all duration-300 flex flex-col overflow-hidden"
+        className="relative w-full max-h-[90vh] sm:max-w-2xl rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border-t sm:border border-slate-200/80 dark:border-slate-800 shadow-2xl transition-all duration-200 animate-modalPop flex flex-col overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(135deg, ${typeCfg.badgeBgLight}0F 0%, transparent 60%)`,
+        }}
       >
         {/* Mobile drawer handle */}
         <div className="sm:hidden w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto my-2.5 flex-shrink-0" />
@@ -289,11 +299,26 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
                 style={{ backgroundColor: typeCfg.accentLight }}
                 aria-hidden="true"
               />
+              <button
+                type="button"
+                onClick={() => setIsShiny((prev) => !prev)}
+                title={isShiny ? 'Switch to Normal Sprite' : 'Switch to Shiny ✨ Sprite'}
+                aria-label={isShiny ? 'Switch to normal sprite' : 'Switch to shiny sprite'}
+                className={`absolute -top-1 -right-1 z-30 p-2 rounded-full border shadow-md transition-all duration-200 cursor-pointer active:scale-90 ${
+                  isShiny
+                    ? 'bg-amber-400 text-slate-900 border-amber-300 shadow-amber-400/50 scale-110'
+                    : 'bg-white/90 dark:bg-slate-800/90 text-slate-500 hover:text-amber-500 border-slate-200/80 dark:border-slate-700/80'
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+              </button>
+
               <img
+                key={artworkSrc}
                 src={artworkSrc}
                 alt={pokemon.name}
                 onError={() => setImgError(true)}
-                className="relative z-10 h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-2xl animate-float"
+                className="relative z-10 h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-2xl animate-float transition-opacity duration-200 ease-in-out"
               />
             </div>
           </div>
