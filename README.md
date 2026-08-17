@@ -28,7 +28,7 @@ Unlike standard Pokédex lookup clones, this application is engineered with high
 
 ## 📌 Table of Contents
 
-- [📸 Interface & Visual Preview](#-interface--visual-preview)
+- [📸 Screenshots](#-screenshots)
 - [✨ Feature Highlights](#-feature-highlights)
   - [🔍 Core Discovery & Search](#-core-discovery--search)
   - [📖 Rich Detail & Biology](#-rich-detail--biology)
@@ -46,35 +46,32 @@ Unlike standard Pokédex lookup clones, this application is engineered with high
 
 ---
 
-## 📸 Interface & Visual Preview
+## 📸 Screenshots
 
-| View Component | Description | ASCII Layout |
-|---|---|---|
-| **Main Explorer** | Soft light theme with 3D trading card tilt, search bar, 18-type filter pills, and live count badges | `[ Search Bar \| Type Pills \| 20 Card Grid ]` |
-| **Detail Modal & Cries** | Species flavor text, physical traits, audio cry player, shiny toggle, and stat percentile insights | `[ Flavor Text \| Cry Player \| Stat Bars ]` |
-| **Side-by-Side Face-Off** | Paired base stat comparison with `▲` winner indicators and total BST evaluation banner | `[ Pokémon A vs Pokémon B \| Paired Bars ]` |
-| **6-Slot Squad Builder** | Battle squad drawer with live 18-type defensive coverage matrix analysis | `[ 6 Slots \| Shared Weakness Matrix ]` |
-
-### Terminal & Desktop Explorer Mockup
-```text
-+-----------------------------------------------------------------------------------+
-|  [Pokéball] Pokédex Explorer    Loaded: 20/1302   [⌘K]   [⚔️ VS 2/2]   [❤️ 4] ☀️ |
-+-----------------------------------------------------------------------------------+
-|                                                                                   |
-|    ⚡ Discover the World of Pokémon                                               |
-|    Search by name or Pokédex ID...                         [🔍 Search]            |
-|                                                                                   |
-|    [All] [🔥 Fire] [💧 Water] [🌿 Grass] [⚡ Electric] ... (18 Types with Emojis)    |
-|    Sort by: [ID] [Name] [Type]   Direction: [Asc ↑]   [ ] Favorites Only          |
-+-----------------------------------------------------------------------------------+
-|  +----------------+  +----------------+  +----------------+  +----------------+  |
-|  | #0001     [VS] |  | #0004     [VS] |  | #0007     [VS] |  | #0025     [VS] |  |
-|  |   [Bulbasaur]  |  |  [Charmander]  |  |   [Squirtle]   |  |   [Pikachu]    |  |
-|  |  (🌿 Grass)    |  |    (🔥 Fire)   |  |   (💧 Water)   |  |  (⚡ Electric)  |  |
-|  | HP 45 ATK 49   |  | HP 39 ATK 52   |  | HP 44 ATK 48   |  | HP 35 ATK 55   |  |
-|  +----------------+  +----------------+  +----------------+  +----------------+  |
-+-----------------------------------------------------------------------------------+
-```
+<table>
+  <tr>
+    <td><strong>Homepage & Browse Grid</strong></td>
+    <td><strong>Search & Filter</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/homepage-grid.png" width="400"/></td>
+    <td><img src="screenshots/hero-search.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td><strong>Command Palette (⌘K)</strong></td>
+    <td><strong>Pokémon Detail View</strong></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/command-palette.png" width="400"/></td>
+    <td><img src="screenshots/detail-modal.png" width="400"/></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><strong>Side-by-Side Compare</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="screenshots/compare-faceoff.png" width="600"/></td>
+  </tr>
+</table>
 
 ---
 
