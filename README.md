@@ -249,12 +249,12 @@ npm run preview
 
 ### Deploying to Vercel (CLI or GitHub)
 
-1. **Option A: Vercel CLI**:
+1. **Vercel CLI**:
    ```bash
    npx vercel --prod
    ```
 
-2. **Option B: GitHub Integration**:
+2. **GitHub Integration**:
    - Push repository to GitHub.
    - Import project into Vercel Dashboard.
    - Build settings are auto-detected (`npm run build`, output directory `dist`).

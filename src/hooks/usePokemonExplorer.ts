@@ -21,17 +21,15 @@ export interface UsePokemonExplorerProps {
 }
 
 export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
-  // ----- Raw loaded pool -----
+  // State
   const [loadedItems, setLoadedItems] = useState<PokemonDetail[]>([]);
-
-  // ----- Filter / sort state -----
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<PokemonTypeKey | 'all'>('all');
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [sortBy, setSortBy] = useState<SortKey>('id');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-  // ----- Pagination & status -----
+  // Pagination & status
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -39,16 +37,14 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
-  // ----- Direct search state -----
+  // Direct search state
   const [directSearchItem, setDirectSearchItem] = useState<PokemonDetail | null>(null);
   const [isSearchingDirect, setIsSearchingDirect] = useState(false);
 
   const debouncedSearch = useDebounce(searchQuery, 300);
   const loadMoreLock = useRef(false);
 
-  // -------------------------------------------------------------------
-  // Initial data load — re-runs whenever the type filter changes
-  // -------------------------------------------------------------------
+  // Initial fetch on mount or type change
   const loadInitialData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -62,7 +58,6 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
         setHasMore(data.hasMore);
         setOffset(PAGE_SIZE);
       } else {
-        // Lazy: fetch roster then detail-fetch only the first chunk
         const data = await getTypeRosterPage(selectedType, 0, PAGE_SIZE);
         setLoadedItems(data.items);
         setTotalCount(data.totalCount);
@@ -85,9 +80,7 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
     loadInitialData();
   }, [loadInitialData]);
 
-  // -------------------------------------------------------------------
-  // Load More — appends next PAGE_SIZE items
-  // -------------------------------------------------------------------
+  // Load next chunk
   const loadMore = useCallback(async () => {
     if (isLoading || isLoadingMore || !hasMore || loadMoreLock.current) return;
 
@@ -117,9 +110,7 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
     }
   }, [isLoading, isLoadingMore, hasMore, offset, selectedType]);
 
-  // -------------------------------------------------------------------
-  // Direct API search for names/IDs not yet in loaded pool
-  // -------------------------------------------------------------------
+  // Direct API search for un-cached query
   useEffect(() => {
     const query = debouncedSearch.trim().toLowerCase();
     if (!query || query.length < 3) {
@@ -128,7 +119,6 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
       return;
     }
 
-    // Skip if something in the loaded pool already matches
     const alreadyLoaded = loadedItems.some(
       (p) =>
         p.name.toLowerCase().includes(query) ||
@@ -159,17 +149,13 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
     };
   }, [debouncedSearch, loadedItems]);
 
-  // -------------------------------------------------------------------
-  // Unified filter pipeline:  search → type → favorites → sort
-  // -------------------------------------------------------------------
+  // Filter and sort pipeline
   const displayedPokemon = useMemo(() => {
-    // 1. Start with loaded items + direct search match (if any)
     let pool = [...loadedItems];
     if (directSearchItem && !pool.some((p) => p.id === directSearchItem.id)) {
       pool.push(directSearchItem);
     }
 
-    // 2. Search filter (name or numeric ID)
     const q = debouncedSearch.trim().toLowerCase();
     if (q) {
       pool = pool.filter((p) => {
@@ -179,17 +165,14 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
       });
     }
 
-    // 3. Type filter (AND with search)
     if (selectedType !== 'all') {
       pool = pool.filter((p) => p.types.includes(selectedType));
     }
 
-    // 4. Favorites filter (AND with above)
     if (favoritesOnly) {
       pool = pool.filter((p) => favoriteSet.has(p.id));
     }
 
-    // 5. Sort
     pool.sort((a, b) => {
       let cmp = 0;
       switch (sortBy) {
@@ -220,9 +203,6 @@ export function usePokemonExplorer({ favoriteSet }: UsePokemonExplorerProps) {
     sortDirection,
   ]);
 
-  // -------------------------------------------------------------------
-  // Helpers
-  // -------------------------------------------------------------------
   const resetFilters = useCallback(() => {
     setSearchQuery('');
     setSelectedType('all');

@@ -104,7 +104,7 @@ const ExplorerHome: React.FC = () => {
         />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-16">
-          {/* Hero with search bar mounted inside */}
+          {/* Hero section */}
           <Hero
             totalApiCount={totalApiCount}
             searchQuery={searchQuery}
@@ -112,12 +112,12 @@ const ExplorerHome: React.FC = () => {
             isSearching={isSearchingDirect}
           />
 
-          {/* Filter & Sort Control Panel */}
+          {/* Filter & sort control panel */}
           <section
             aria-label="Pokémon Filters and Sorting"
             className="space-y-4 rounded-3xl bg-white/70 dark:bg-slate-900/60 p-4 sm:p-6 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl shadow-xs"
           >
-            {/* Type Filter Pills */}
+            {/* Type filter pills */}
             <div className="w-full">
               <TypeFilterBar
                 selectedType={selectedType}
@@ -126,7 +126,7 @@ const ExplorerHome: React.FC = () => {
               />
             </div>
 
-            {/* Sort & Favorites Controls */}
+            {/* Sort options */}
             <div className="w-full border-t border-slate-100 dark:border-slate-800/80 pt-3">
               <SortSelector
                 sortBy={sortBy}
@@ -140,7 +140,7 @@ const ExplorerHome: React.FC = () => {
             </div>
           </section>
 
-          {/* Main Pokemon Card Grid */}
+          {/* Grid display */}
           <section aria-label="Pokémon Directory Grid">
             <PokemonGrid
               pokemonList={pokemonList}
@@ -166,10 +166,9 @@ const ExplorerHome: React.FC = () => {
 
       <Footer />
 
-      {/* Floating Scroll to Top */}
       <ScrollToTop />
 
-      {/* 6-Slot Squad Team Builder Drawer */}
+      {/* Team builder drawer */}
       <TeamBuilderDrawer
         team={team}
         isOpen={isTeamDrawerOpen}
@@ -179,7 +178,7 @@ const ExplorerHome: React.FC = () => {
         onSelectPokemon={handleSelectPokemon}
       />
 
-      {/* Side-by-Side Compare Modal */}
+      {/* Comparison modal */}
       <PokemonCompareModal
         compareList={compareList}
         isOpen={isCompareOpen}
@@ -189,7 +188,7 @@ const ExplorerHome: React.FC = () => {
         onSelectPokemon={handleSelectPokemon}
       />
 
-      {/* Command Palette Overlay */}
+      {/* Command palette */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}
@@ -201,7 +200,7 @@ const ExplorerHome: React.FC = () => {
   );
 };
 
-// Route wrapper for direct `/pokemon/:name` deep links
+// Route wrapper for /pokemon/:name
 const PokemonDetailRouteModal: React.FC = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
@@ -211,14 +210,12 @@ const PokemonDetailRouteModal: React.FC = () => {
   const { team, isInTeam, toggleTeamMember } = useTeamBuilder();
   const { markAsDiscovered } = usePokedexCompletion();
 
-  // Mark as discovered when pokemon loads
   useEffect(() => {
     if (pokemon?.id) {
       markAsDiscovered(pokemon.id);
     }
   }, [pokemon?.id, markAsDiscovered]);
 
-  // Pull similar Pokémon synchronously from cache without invoking usePokemonExplorer
   const similarPokemon = useMemo(() => {
     if (!pokemon) return [];
     return getCachedSimilarPokemon(pokemon.types[0], pokemon.id);

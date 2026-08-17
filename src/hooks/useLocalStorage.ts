@@ -16,8 +16,7 @@ export function useLocalStorage<T>(
     try {
       const item = window.localStorage.getItem(key);
       return item ? (JSON.parse(item) as T) : initialValueRef.current;
-    } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+    } catch {
       return initialValueRef.current;
     }
   }, [key]);
@@ -35,13 +34,12 @@ export function useLocalStorage<T>(
           const newValue = value instanceof Function ? value(currentStoredValue) : value;
           try {
             window.localStorage.setItem(key, JSON.stringify(newValue));
-          } catch (e) {
-            console.warn(`Error writing to localStorage key "${key}":`, e);
+          } catch {
+            // Storage quota full or disabled
           }
           return newValue;
         });
 
-        // Dispatch storage event asynchronously after current call stack to avoid React render phase collisions
         setTimeout(() => {
           try {
             window.dispatchEvent(new Event('local-storage-update'));
@@ -49,8 +47,8 @@ export function useLocalStorage<T>(
             // ignore
           }
         }, 0);
-      } catch (error) {
-        console.warn(`Error setting localStorage key "${key}":`, error);
+      } catch {
+        // Fallback for unexpected write errors
       }
     },
     [key]

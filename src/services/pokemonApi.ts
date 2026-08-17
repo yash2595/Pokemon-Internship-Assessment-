@@ -13,35 +13,17 @@ import type {
 
 const API_BASE = 'https://pokeapi.co/api/v2';
 
-// ---------------------------------------------------------------------------
-// In-memory caches — survive for the full browser session
-// ---------------------------------------------------------------------------
-
-/** Full-detail cache keyed by both `id` (number) and `name` (string). */
+// In-memory caches for browser session
 const detailCache = new Map<string | number, PokemonDetail>();
-
-/** Type roster cache: type name → array of { name, url }. */
 const typeRosterCache = new Map<string, RawNamedResource[]>();
-
-/** Species flavor text cache. */
 const speciesCache = new Map<string | number, PokemonSpecies>();
 
-// ---------------------------------------------------------------------------
-// Fetch client with typed error handling
-// ---------------------------------------------------------------------------
-
-/**
- * Thin wrapper around `fetch` that classifies errors:
- *  - **network**: offline / DNS / CORS
- *  - **404**:     Pokémon or type not found
- *  - **other**:   unexpected status codes
- */
+// Fetch wrapper with error classification
 async function apiFetch<T>(url: string): Promise<T> {
   let res: Response;
   try {
     res = await fetch(url);
   } catch {
-    // fetch itself threw — network failure
     const err: ApiError = {
       message: 'Network error — please check your connection and try again.',
     };
@@ -82,10 +64,7 @@ function resolveShinyArtwork(raw: RawPokemonDetail): string {
   );
 }
 
-/**
- * Map raw API detail into the app-level `PokemonDetail` view-model.
- * Moves are capped at 20 to keep payloads small in the UI.
- */
+// Map raw API detail into normalized PokemonDetail
 function transformDetail(raw: RawPokemonDetail): PokemonDetail {
   return {
     id: raw.id,
@@ -95,8 +74,8 @@ function transformDetail(raw: RawPokemonDetail): PokemonDetail {
     types: raw.types
       .sort((a, b) => a.slot - b.slot)
       .map((t) => t.type.name as PokemonTypeKey),
-    height: raw.height / 10,   // decimetres → metres
-    weight: raw.weight / 10,   // hectograms → kg
+    height: raw.height / 10,
+    weight: raw.weight / 10,
     abilities: raw.abilities
       .sort((a, b) => a.slot - b.slot)
       .map((a) => ({
@@ -115,10 +94,6 @@ function transformDetail(raw: RawPokemonDetail): PokemonDetail {
   };
 }
 
-/**
- * Reduce a full `PokemonDetail` to the lightweight `PokemonSummary`
- * used on grid/list cards.
- */
 export function toSummary(detail: PokemonDetail): PokemonSummary {
   return {
     id: detail.id,
@@ -127,10 +102,6 @@ export function toSummary(detail: PokemonDetail): PokemonSummary {
     types: detail.types,
   };
 }
-
-// ---------------------------------------------------------------------------
-// Core detail fetcher (private, cache-aware)
-// ---------------------------------------------------------------------------
 
 async function fetchDetail(nameOrId: string | number): Promise<PokemonDetail> {
   const key =
@@ -144,18 +115,13 @@ async function fetchDetail(nameOrId: string | number): Promise<PokemonDetail> {
   );
   const detail = transformDetail(raw);
 
-  // Store under both id and name so either lookup hits cache
   detailCache.set(detail.id, detail);
   detailCache.set(detail.name.toLowerCase(), detail);
 
   return detail;
 }
 
-/**
- * Fetch multiple Pokémon concurrently.
- * Failures for individual items are silently dropped (the item simply
- * won't appear in results) — prevents one 404 from tanking a whole page.
- */
+// Fetch batch concurrently, dropping individual 404s
 async function fetchBatch(
   namesOrIds: (string | number)[]
 ): Promise<PokemonDetail[]> {
@@ -170,15 +136,7 @@ async function fetchBatch(
     .map((r) => r.value);
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
-/**
- * Paginated browse list.
- * Returns fully-resolved details for the current page and metadata for
- * "Load More" control.
- */
+// Fetch paginated Pokemon list
 export async function getPokemonList(
   limit: number = 20,
   offset: number = 0
@@ -196,26 +154,15 @@ export async function getPokemonList(
   };
 }
 
-/**
- * Single Pokémon lookup by name (cache-aware).
- */
 export async function getPokemonByName(name: string): Promise<PokemonDetail> {
   return fetchDetail(name);
 }
 
-/**
- * Single Pokémon lookup by numeric id (cache-aware).
- */
 export async function getPokemonById(id: number): Promise<PokemonDetail> {
   return fetchDetail(id);
 }
 
-/**
- * Returns the **roster only** for a given type — an array of
- * `{ name, url }` pairs. Does NOT eagerly fetch each Pokémon's
- * full details; the consumer should page through the roster and
- * call `getPokemonByName` for each visible chunk.
- */
+// Fetch roster list for a specific type
 export async function getPokemonByType(
   type: string
 ): Promise<{ roster: RawNamedResource[]; totalCount: number }> {
@@ -234,10 +181,7 @@ export async function getPokemonByType(
   return { roster, totalCount: roster.length };
 }
 
-/**
- * Convenience: resolve a page of the type roster into full details.
- * Used by the explorer hook to lazily fetch only the visible chunk.
- */
+// Resolve visible page chunk for type roster
 export async function getTypeRosterPage(
   type: string,
   offset: number = 0,
@@ -254,10 +198,7 @@ export async function getTypeRosterPage(
   };
 }
 
-/**
-  Fetch species details (flavor text & category) for a Pokémon.
-  Fails gracefully returning null if unavailable.
- */
+// Fetch species flavor text and category
 export async function getPokemonSpecies(
   nameOrId: string | number
 ): Promise<PokemonSpecies | null> {
@@ -291,14 +232,18 @@ export async function getPokemonSpecies(
     speciesCache.set(key, speciesObj);
     return speciesObj;
   } catch {
-    // Fail gracefully: species description is non-critical
     return null;
   }
 }
 
-/**
- * Synchronously retrieves cached Pokémon sharing a primary type.
- */
+// Get cached Pokemon sharing primary type
+export async function getCachedSimilarPokemonAsync(
+  primaryType: PokemonTypeKey,
+  currentId: number
+): Promise<PokemonDetail[]> {
+  return getCachedSimilarPokemon(primaryType, currentId);
+}
+
 export function getCachedSimilarPokemon(
   primaryType: PokemonTypeKey,
   currentId: number

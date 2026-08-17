@@ -118,8 +118,8 @@ export const PokemonDetailModal: React.FC<PokemonDetailModalProps> = ({
       await navigator.clipboard.writeText(shareUrl);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
-    } catch (err) {
-      console.warn('Failed to copy share link:', err);
+    } catch {
+      // Ignore clipboard write failures
     }
   };
 
