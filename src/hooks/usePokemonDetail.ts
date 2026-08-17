@@ -12,37 +12,61 @@ export function usePokemonDetail(name: string | null) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<ApiError | null>(null);
 
-  const fetchDetail = useCallback(async (target: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await getPokemonByName(target);
-      setPokemon(data);
-    } catch (err: unknown) {
-      const apiErr =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as ApiError)
-          : { message: 'Failed to load Pokémon details. Please try again.' };
-      setError(apiErr);
-      setPokemon(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
+    let isSubscribed = true;
+
     if (name) {
-      fetchDetail(name);
+      setIsLoading(true);
+      setError(null);
+      getPokemonByName(name)
+        .then((data) => {
+          if (isSubscribed) {
+            setPokemon(data);
+            setIsLoading(false);
+          }
+        })
+        .catch((err: unknown) => {
+          if (isSubscribed) {
+            const apiErr =
+              err && typeof err === 'object' && 'message' in err
+                ? (err as ApiError)
+                : { message: 'Failed to load Pokémon details. Please try again.' };
+            setError(apiErr);
+            setPokemon(null);
+            setIsLoading(false);
+          }
+        });
     } else {
       setPokemon(null);
       setError(null);
       setIsLoading(false);
     }
-  }, [name, fetchDetail]);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [name]);
 
   const retry = useCallback(() => {
-    if (name) fetchDetail(name);
-  }, [name, fetchDetail]);
+    if (name) {
+      setIsLoading(true);
+      setError(null);
+      getPokemonByName(name)
+        .then((data) => {
+          setPokemon(data);
+          setIsLoading(false);
+        })
+        .catch((err: unknown) => {
+          const apiErr =
+            err && typeof err === 'object' && 'message' in err
+              ? (err as ApiError)
+              : { message: 'Failed to load Pokémon details. Please try again.' };
+          setError(apiErr);
+          setPokemon(null);
+          setIsLoading(false);
+        });
+    }
+  }, [name]);
 
   return { pokemon, isLoading, error, retry };
 }
